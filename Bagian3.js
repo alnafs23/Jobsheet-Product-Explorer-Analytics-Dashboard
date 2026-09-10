@@ -21,7 +21,6 @@ function getFiveStarReviews(products) {
   for (const p of products) {
     for (const review of p.reviews) {
       if (review.rating === 5) {
-        // sertakan konteks produk agar review tidak "lepas konteks"
         result.push({ productId: p.id, productTitle: p.title, ...review });
       }
     }
@@ -45,7 +44,6 @@ function getAllCalculatedRatings(products) {
 }
 
 function getMostReviewedProduct(products) {
-  // reduce untuk mencari nilai maksimum berdasarkan p.reviews.length
   return products.reduce((mostReviewed, current) =>
     current.reviews.length > mostReviewed.reviews.length
       ? current
