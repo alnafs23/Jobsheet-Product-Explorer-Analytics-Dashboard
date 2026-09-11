@@ -273,6 +273,131 @@ function getAllCommentsFlat(products) {
   return products.flatMap((p) => p.reviews.map((r) => r.comment));
 }
 
+// Bagian 5 — Map, Filter, Reduce dalam Konteks Nyata
+function getAveragePriceByCategory(products, category) {
+  const prices = products
+    .filter((p) => p.category === category)
+    .map((p) => p.price);
+
+  if (prices.length === 0) return 0;
+  return prices.reduce((a, b) => a + b, 0) / prices.length;
+}
+
+function getStatistics(products) {
+  const prices = products.map((p) => p.price);
+  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+  const totalRating = products.reduce((sum, p) => sum + p.rating, 0);
+
+  return {
+    totalProducts: products.length,
+    averagePrice: prices.reduce((a, b) => a + b, 0) / products.length,
+    highestPrice: Math.max(...prices),
+    lowestPrice: Math.min(...prices),
+    totalStock,
+    averageRating: totalRating / products.length,
+  };
+}
+
+// Bagian 5 — Map, Filter, Reduce dalam Konteks Nyata
+// ===================================================
+function getAveragePriceByCategory(products, category) {
+  const prices = products
+    .filter((p) => p.category === category)
+    .map((p) => p.price);
+
+  if (prices.length === 0) return 0;
+  return prices.reduce((a, b) => a + b, 0) / prices.length;
+}
+
+function getStatistics(products) {
+  const prices = products.map((p) => p.price);
+  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+  const totalRating = products.reduce((sum, p) => sum + p.rating, 0);
+
+  return {
+    totalProducts: products.length,
+    averagePrice: prices.reduce((a, b) => a + b, 0) / products.length,
+    highestPrice: Math.max(...prices),
+    lowestPrice: Math.min(...prices),
+    totalStock,
+    averageRating: totalRating / products.length,
+  };
+}
+
+// Bagian 6 — Searching (Linear Search)
+function linearSearch(array, target) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === target) return i;
+  }
+  return -1;
+}
+
+function linearSearchProductById(products, id) {
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].id === id) return i;
+  }
+  return -1;
+}
+
+// Bagian 7 — Binary Search
+function binarySearch(sortedArray, target) {
+  let left = 0;
+  let right = sortedArray.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (sortedArray[mid] === target) return mid;
+    if (sortedArray[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+
+  return -1;
+}
+
+function binarySearchByPrice(sortedProducts, targetPrice) {
+  let left = 0;
+  let right = sortedProducts.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (sortedProducts[mid].price === targetPrice) return mid;
+    if (sortedProducts[mid].price < targetPrice) left = mid + 1;
+    else right = mid - 1;
+  }
+
+  return -1;
+}
+
+// Bagian 8 — Sorting
+function bubbleSort(numbers) {
+  const arr = [...numbers];
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = 0; j < arr.length - 1 - i; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+}
+
+function sortProducts(products, sortBy) {
+  const sorted = [...products];
+
+  switch (sortBy) {
+    case "price-asc":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "price-desc":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "rating":
+      return sorted.sort((a, b) => b.rating - a.rating);
+    case "title":
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    default:
+      return sorted;
+  }
+}
+
 module.exports = {
   calculateDiscountedPrice,
   applyDiscounts,
