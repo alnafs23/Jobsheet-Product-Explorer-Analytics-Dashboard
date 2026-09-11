@@ -1,4 +1,30 @@
-const products = [
+const { products } = require("./dataNested.js");
+
+// Bagian 1 — JavaScript Fundamentals
+function calculateDiscountedPrice(price, discountPercent) {
+  return price - (price * discountPercent) / 100;
+}
+
+const cart = [
+  { title: "Laptop", price: 1000, discountPercent: 10 },
+  { title: "Mouse", price: 20, discountPercent: 5 },
+  { title: "Keyboard", price: 50, discountPercent: 0 },
+];
+
+function applyDiscounts(cart) {
+  const result = [];
+  for (const item of cart) {
+    const finalPrice = calculateDiscountedPrice(
+      item.price,
+      item.discountPercent,
+    );
+    result.push({ ...item, finalPrice });
+  }
+  return result;
+}
+
+// Bagian 2 — Data Representation dan Array of Objects
+const productsBagian2 = [
   { id: 1, title: "Laptop", price: 1200, category: "laptops", stock: 5 },
   { id: 2, title: "Smartphone", price: 800, category: "phones", stock: 15 },
   { id: 3, title: "Headphones", price: 100, category: "audio", stock: 3 },
@@ -157,9 +183,112 @@ function updateStock(products, id, newStock) {
   return products.map((p) => (p.id === id ? { ...p, stock: newStock } : p));
 }
 
+// Bagian 3 — Nested Data
+function getAllTagsNested(products) {
+  const result = [];
+  for (const p of products) {
+    result.push(p.tags);
+  }
+  return result;
+}
+
+function findProductsByTag(products, tag) {
+  return products.filter((p) => p.tags.includes(tag));
+}
+
+function getReviewCounts(products) {
+  return products.map((p) => ({
+    id: p.id,
+    title: p.title,
+    totalReviews: p.reviews.length,
+  }));
+}
+
+function getFiveStarReviews(products) {
+  const result = [];
+  for (const p of products) {
+    for (const review of p.reviews) {
+      if (review.rating === 5) {
+        result.push({ productId: p.id, productTitle: p.title, ...review });
+      }
+    }
+  }
+  return result;
+}
+
+function getCalculatedAverageRating(product) {
+  if (product.reviews.length === 0) return 0;
+  const total = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+  return total / product.reviews.length;
+}
+
+function getAllCalculatedRatings(products) {
+  return products.map((p) => ({
+    id: p.id,
+    title: p.title,
+    fieldRating: p.rating,
+    calculatedRating: getCalculatedAverageRating(p),
+  }));
+}
+
+function getMostReviewedProduct(products) {
+  return products.reduce((mostReviewed, current) =>
+    current.reviews.length > mostReviewed.reviews.length
+      ? current
+      : mostReviewed,
+  );
+}
+
+function getAllReviewRatingsFlat(products) {
+  const ratings = [];
+  for (const p of products) {
+    for (const review of p.reviews) {
+      ratings.push(review.rating);
+    }
+  }
+  return ratings;
+}
+
+// Bagian 4 — Flattening Data
+const tagsNested = [
+  ["computer", "office"],
+  ["electronics"],
+  ["gaming", "computer"],
+];
+
+tagsNested.flat();
+
+const sampleProducts = [
+  { title: "Laptop", tags: ["computer", "office"] },
+  { title: "Phone", tags: ["mobile"] },
+];
+
+sampleProducts.flatMap((p) => p.tags);
+
+function getAllTagsFlat(products) {
+  return products.flatMap((p) => p.tags);
+}
+
+function getAllCommentsFlat(products) {
+  return products.flatMap((p) => p.reviews.map((r) => r.comment));
+}
+
 module.exports = {
-  products,
+  calculateDiscountedPrice,
+  applyDiscounts,
+  cart,
+  productsBagian2,
   findProductById,
   getLowStockProducts,
   updateStock,
+  getAllTagsNested,
+  findProductsByTag,
+  getReviewCounts,
+  getFiveStarReviews,
+  getCalculatedAverageRating,
+  getAllCalculatedRatings,
+  getMostReviewedProduct,
+  getAllReviewRatingsFlat,
+  getAllTagsFlat,
+  getAllCommentsFlat,
 };
