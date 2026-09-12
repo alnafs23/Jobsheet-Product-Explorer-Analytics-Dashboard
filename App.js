@@ -298,6 +298,31 @@ function getStatistics(products) {
   };
 }
 
+// Bagian 5 — Map, Filter, Reduce dalam Konteks Nyata
+function getAveragePriceByCategory(products, category) {
+  const prices = products
+    .filter((p) => p.category === category)
+    .map((p) => p.price);
+
+  if (prices.length === 0) return 0;
+  return prices.reduce((a, b) => a + b, 0) / prices.length;
+}
+
+function getStatistics(products) {
+  const prices = products.map((p) => p.price);
+  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+  const totalRating = products.reduce((sum, p) => sum + p.rating, 0);
+
+  return {
+    totalProducts: products.length,
+    averagePrice: prices.reduce((a, b) => a + b, 0) / products.length,
+    highestPrice: Math.max(...prices),
+    lowestPrice: Math.min(...prices),
+    totalStock,
+    averageRating: totalRating / products.length,
+  };
+}
+
 // Bagian 6 — Searching (Linear Search)
 function linearSearch(array, target) {
   for (let i = 0; i < array.length; i++) {
