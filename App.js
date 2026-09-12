@@ -298,32 +298,6 @@ function getStatistics(products) {
   };
 }
 
-// Bagian 5 — Map, Filter, Reduce dalam Konteks Nyata
-// ===================================================
-function getAveragePriceByCategory(products, category) {
-  const prices = products
-    .filter((p) => p.category === category)
-    .map((p) => p.price);
-
-  if (prices.length === 0) return 0;
-  return prices.reduce((a, b) => a + b, 0) / prices.length;
-}
-
-function getStatistics(products) {
-  const prices = products.map((p) => p.price);
-  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-  const totalRating = products.reduce((sum, p) => sum + p.rating, 0);
-
-  return {
-    totalProducts: products.length,
-    averagePrice: prices.reduce((a, b) => a + b, 0) / products.length,
-    highestPrice: Math.max(...prices),
-    lowestPrice: Math.min(...prices),
-    totalStock,
-    averageRating: totalRating / products.length,
-  };
-}
-
 // Bagian 6 — Searching (Linear Search)
 function linearSearch(array, target) {
   for (let i = 0; i < array.length; i++) {
@@ -398,6 +372,123 @@ function sortProducts(products, sortBy) {
   }
 }
 
+// Bagian 9 — Grouping dan Aggregation
+function groupByCategory(products) {
+  return products.reduce((groups, product) => {
+    const key = product.category;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(product);
+    return groups;
+  }, {});
+}
+
+function summarizeCategoryCounts(products) {
+  const grouped = groupByCategory(products);
+  return Object.entries(grouped).map(([category, items]) => ({
+    category,
+    jumlahProduk: items.length,
+  }));
+}
+
+function countFrequency(array) {
+  return array.reduce((counts, item) => {
+    counts[item] = (counts[item] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function frequencyByCategory(products) {
+  return countFrequency(products.map((p) => p.category));
+}
+
+function frequencyByTags(products) {
+  return countFrequency(products.flatMap((p) => p.tags));
+}
+
+function frequencyByRating(products) {
+  return countFrequency(products.map((p) => Math.round(p.rating)));
+}
+
+function frequencyByBrand(products) {
+  const brands = products
+    .map((p) => p.brand)
+    .filter((brand) => brand !== undefined);
+  return countFrequency(brands);
+}
+
+function getUniqueCategories(products) {
+  return [...new Set(products.map((p) => p.category))];
+}
+
+function getUniqueBrands(products) {
+  return [
+    ...new Set(products.map((p) => p.brand).filter((b) => b !== undefined)),
+  ];
+}
+
+function getUniqueTags(products) {
+  return [...new Set(products.flatMap((p) => p.tags))];
+}
+
+// Bagian 12 — Map (Struktur Data)
+function buildProductLookup(products) {
+  const productMap = new Map();
+  for (const product of products) {
+    productMap.set(product.id, product);
+  }
+  return productMap;
+}
+
+// Bagian 13 — Stack (LIFO)
+class Stack {
+  constructor() {
+    this.items = [];
+  }
+  push(item) {
+    this.items.push(item);
+  }
+  pop() {
+    return this.items.pop();
+  }
+  peek() {
+    return this.items[this.items.length - 1];
+  }
+  isEmpty() {
+    return this.items.length === 0;
+  }
+}
+
+const searchHistory = new Stack();
+
+function recordSearch(keyword) {
+  searchHistory.push(keyword);
+}
+
+function undoSearch() {
+  if (searchHistory.isEmpty()) return null;
+  searchHistory.pop();
+  return searchHistory.peek() ?? null;
+}
+
+// Bagian 14 — Queue (FIFO)
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+  enqueue(item) {
+    this.items.push(item);
+  }
+  dequeue() {
+    return this.items.shift();
+  }
+  peek() {
+    return this.items[0];
+  }
+  isEmpty() {
+    return this.items.length === 0;
+  }
+}
+
 module.exports = {
   calculateDiscountedPrice,
   applyDiscounts,
@@ -416,4 +507,24 @@ module.exports = {
   getAllReviewRatingsFlat,
   getAllTagsFlat,
   getAllCommentsFlat,
+  groupByCategory,
+  summarizeCategoryCounts,
+  countFrequency,
+  frequencyByCategory,
+  frequencyByTags,
+  frequencyByRating,
+  frequencyByBrand,
+  getUniqueCategories,
+  getUniqueBrands,
+  getUniqueTags,
+  buildProductLookup,
+  Stack,
+  searchHistory,
+  recordSearch,
+  undoSearch,
+  Stack,
+  searchHistory,
+  recordSearch,
+  undoSearch,
+  Queue,
 };
