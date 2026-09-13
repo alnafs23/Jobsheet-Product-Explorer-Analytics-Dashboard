@@ -415,6 +415,7 @@ function summarizeCategoryCounts(products) {
   }));
 }
 
+// Bagian 10 - Frequency Counting
 function countFrequency(array) {
   return array.reduce((counts, item) => {
     counts[item] = (counts[item] || 0) + 1;
@@ -441,6 +442,7 @@ function frequencyByBrand(products) {
   return countFrequency(brands);
 }
 
+// Bagian 11 — Set
 function getUniqueCategories(products) {
   return [...new Set(products.map((p) => p.category))];
 }
@@ -514,6 +516,227 @@ class Queue {
   }
 }
 
+// Bagian 15 — Recursion
+const categoryTree = [
+  {
+    name: "Electronics",
+    children: [
+      { name: "Laptop", children: [] },
+      { name: "Phone", children: [] },
+    ],
+  },
+];
+
+function printCategories(categories, depth = 0) {
+  for (const category of categories) {
+    console.log(" ".repeat(depth) + category.name);
+    if (category.children.length > 0) {
+      printCategories(category.children, depth + 1);
+    }
+  }
+}
+
+// Bagian 16 — Algorithm Complexity
+// Latihan 16.1: linearSearch & binarySearch versi menghitung jumlah langkah
+function linearSearchCountSteps(array, target) {
+  let steps = 0;
+  for (let i = 0; i < array.length; i++) {
+    steps++;
+    if (array[i] === target) return { index: i, steps };
+  }
+  return { index: -1, steps };
+}
+
+function binarySearchCountSteps(sortedArray, target) {
+  let left = 0;
+  let right = sortedArray.length - 1;
+  let steps = 0;
+  while (left <= right) {
+    steps++;
+    const mid = Math.floor((left + right) / 2);
+    if (sortedArray[mid] === target) return { index: mid, steps };
+    if (sortedArray[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return { index: -1, steps };
+}
+
+function generateSortedArray(size) {
+  const arr = [];
+  for (let i = 0; i < size; i++) arr.push(i);
+  return arr;
+}
+
+// Latihan 16.2: nested loop O(n^2) vs grouping berbasis Map O(n)
+function generateProductsForComplexityTest(size) {
+  const arr = [];
+  for (let i = 1; i <= size; i++) {
+    arr.push({ id: i, category: `category-${i % 20}` });
+  }
+  return arr;
+}
+
+function findSameCategoryPairsNestedLoop(items) {
+  let comparisons = 0;
+  let pairCount = 0;
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      comparisons++;
+      if (items[i].category === items[j].category) pairCount++;
+    }
+  }
+  return { comparisons, pairCount };
+}
+
+function findSameCategoryPairsWithMap(items) {
+  let operations = 0;
+  const groups = new Map();
+  for (const item of items) {
+    operations++;
+    if (!groups.has(item.category)) groups.set(item.category, []);
+    groups.get(item.category).push(item);
+  }
+  let pairCount = 0;
+  for (const group of groups.values()) {
+    const n = group.length;
+    pairCount += (n * (n - 1)) / 2;
+    operations++;
+  }
+  return { operations, pairCount };
+}
+
+console.log("\nBagian 1 — JavaScript Fundamentals");
+console.log(
+  "calculateDiscountedPrice(1000, 10):",
+  calculateDiscountedPrice(1000, 10),
+);
+console.log("applyDiscounts(cart):", applyDiscounts(cart));
+
+console.log("\nBagian 2 — Data Representation");
+console.log("findProductById(id=5):", findProductById(productsBagian2, 5));
+console.log(
+  "getLowStockProducts(threshold=10):",
+  getLowStockProducts(productsBagian2, 10),
+);
+console.log(
+  "updateStock(id=1, newStock=50):",
+  updateStock(productsBagian2, 1, 50).find((p) => p.id === 1),
+);
+
+console.log("\nBagian 3 — Nested Data");
+console.log("getAllTagsNested:", getAllTagsNested(products));
+console.log(
+  "findProductsByTag('beauty'):",
+  findProductsByTag(products, "beauty"),
+);
+console.log("getReviewCounts:", getReviewCounts(products));
+console.log("getFiveStarReviews:", getFiveStarReviews(products));
+console.log("getAllCalculatedRatings:", getAllCalculatedRatings(products));
+console.log("getMostReviewedProduct:", getMostReviewedProduct(products).title);
+console.log("getAllReviewRatingsFlat:", getAllReviewRatingsFlat(products));
+
+console.log("\nBagian 4 — Flattening Data");
+console.log("getAllTagsFlat:", getAllTagsFlat(products));
+console.log("getAllCommentsFlat:", getAllCommentsFlat(products));
+
+console.log("\nBagian 5 — Map, Filter, Reduce");
+console.log(
+  "getAveragePriceByCategory('laptops'):",
+  getAveragePriceByCategory(productsBagian2, "laptops"),
+);
+console.log("getStatistics:", getStatistics(products));
+
+console.log("\nBagian 6 — Searching (Linear Search");
+console.log(
+  "linearSearch([5,12,8,23,1], 23):",
+  linearSearch([5, 12, 8, 23, 1], 23),
+);
+console.log(
+  "linearSearchProductById(id=17):",
+  linearSearchProductById(productsBagian2, 17),
+);
+
+console.log("\nBagian 7 — Binary Search");
+console.log(
+  "binarySearch([1,3,5,7,9,11], 7):",
+  binarySearch([1, 3, 5, 7, 9, 11], 7),
+);
+const productsSortedByPrice = sortProducts(productsBagian2, "price-asc");
+console.log(
+  "binarySearchByPrice(targetPrice=800):",
+  binarySearchByPrice(productsSortedByPrice, 800),
+);
+
+console.log("\nBagian 8 — Sorting");
+console.log("bubbleSort([5,3,8,1,9,2]):", bubbleSort([5, 3, 8, 1, 9, 2]));
+console.log(
+  "sortProducts('rating'):",
+  sortProducts(products, "rating").map((p) => p.title),
+);
+
+console.log("\nBagian 9 — Grouping dan Aggregation");
+console.log("groupByCategory:", groupByCategory(productsBagian2));
+console.log(
+  "summarizeCategoryCounts:",
+  summarizeCategoryCounts(productsBagian2),
+);
+
+console.log("\n Bagian 10 — Frequency Counting");
+console.log("frequencyByCategory:", frequencyByCategory(productsBagian2));
+console.log("frequencyByTags:", frequencyByTags(products));
+console.log("frequencyByRating:", frequencyByRating(products));
+console.log("frequencyByBrand:", frequencyByBrand(products));
+
+console.log("\nBagian 11 — Set");
+console.log("getUniqueCategories:", getUniqueCategories(productsBagian2));
+console.log("getUniqueBrands:", getUniqueBrands(products));
+console.log("getUniqueTags:", getUniqueTags(products));
+
+console.log("\nBagian 12 — Map (Struktur Data");
+const productLookup = buildProductLookup(productsBagian2);
+console.log("buildProductLookup -> get(id=10):", productLookup.get(10));
+
+console.log("\nBagian 13 — Stack (LIFO)");
+recordSearch("laptop");
+recordSearch("phone");
+recordSearch("tablet");
+console.log(
+  "searchHistory setelah 3x recordSearch, peek():",
+  searchHistory.peek(),
+);
+console.log("undoSearch():", undoSearch());
+
+console.log("\nBagian 14 — Queue (FIFO)");
+const requestQueue = new Queue();
+requestQueue.enqueue("request-1");
+requestQueue.enqueue("request-2");
+requestQueue.enqueue("request-3");
+console.log("dequeue():", requestQueue.dequeue());
+console.log("peek() setelah 1x dequeue:", requestQueue.peek());
+
+console.log("\nBagian 15 — Recursion");
+printCategories(categoryTree);
+
+console.log("\nBagian 16 — Algorithm Complexity");
+const sortedArray10000 = generateSortedArray(10000);
+console.log(
+  "linearSearchCountSteps(target=9999):",
+  linearSearchCountSteps(sortedArray10000, 9999),
+);
+console.log(
+  "binarySearchCountSteps(target=9999):",
+  binarySearchCountSteps(sortedArray10000, 9999),
+);
+const testItems1000 = generateProductsForComplexityTest(1000);
+console.log(
+  "findSameCategoryPairsNestedLoop:",
+  findSameCategoryPairsNestedLoop(testItems1000),
+);
+console.log(
+  "findSameCategoryPairsWithMap:",
+  findSameCategoryPairsWithMap(testItems1000),
+);
+
 module.exports = {
   calculateDiscountedPrice,
   applyDiscounts,
@@ -552,4 +775,12 @@ module.exports = {
   recordSearch,
   undoSearch,
   Queue,
+  categoryTree,
+  printCategories,
+  linearSearchCountSteps,
+  binarySearchCountSteps,
+  generateSortedArray,
+  generateProductsForComplexityTest,
+  findSameCategoryPairsNestedLoop,
+  findSameCategoryPairsWithMap,
 };
