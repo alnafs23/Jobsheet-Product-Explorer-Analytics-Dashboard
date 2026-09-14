@@ -605,6 +605,82 @@ function findSameCategoryPairsWithMap(items) {
   return { operations, pairCount };
 }
 
+// Bagian 20 — Modern JavaScript (ES6+)
+// Bagian 20 — Modern JavaScript (ES6+)
+// Seluruh contoh berikut dikaitkan langsung dengan Product Explorer.
+
+// Template literal
+const sampleProductForES6 = products[0];
+const label = `${sampleProductForES6.title} - $${sampleProductForES6.price}`;
+
+// Arrow function
+const getTitle = (product) => product.title;
+
+// Destructuring
+const { title, price, category } = sampleProductForES6;
+const [firstProduct, ...restProducts] = products;
+
+// Spread
+const updatedProduct = { ...sampleProductForES6, stock: 20 };
+const newProductForES6 = {
+  id: 999,
+  title: "Produk Baru",
+  price: 15,
+  rating: 0,
+  stock: 0,
+  category: "misc",
+};
+const merged = [...products, newProductForES6];
+
+// Rest parameter
+function sumPrices(...prices) {
+  return prices.reduce((a, b) => a + b, 0);
+}
+
+// Optional chaining dan nullish coalescing
+const width = sampleProductForES6.dimensions?.width ?? "Tidak diketahui";
+
+// Default parameter
+function filterByCategory(products, category = "all") {
+  if (category === "all") return products;
+  return products.filter((p) => p.category === category);
+}
+
+// Latihan 20.1: refactor getStatistics dari Bagian 5 menggunakan  destructuring dan optional chaining pada
+// bagian yang relevan
+function getStatisticsRefactored(products) {
+  const prices = products.map(({ price }) => price); // destructuring
+  const totalStock = products.reduce(
+    (sum, { stock }) => sum + (stock ?? 0), // destructuring + nullish coalescing
+    0,
+  );
+  const totalRating = products.reduce(
+    (sum, product) => sum + (product?.rating ?? 0), // optional chaining + nullish coalescing
+    0,
+  );
+  const { length: totalProducts } = products; // destructuring
+
+  if (totalProducts === 0) {
+    return {
+      totalProducts: 0,
+      averagePrice: 0,
+      highestPrice: 0,
+      lowestPrice: 0,
+      totalStock: 0,
+      averageRating: 0,
+    };
+  }
+
+  return {
+    totalProducts,
+    averagePrice: prices.reduce((a, b) => a + b, 0) / totalProducts,
+    highestPrice: Math.max(...prices),
+    lowestPrice: Math.min(...prices),
+    totalStock,
+    averageRating: totalRating / totalProducts,
+  };
+}
+
 console.log("\nBagian 1 — JavaScript Fundamentals");
 console.log(
   "calculateDiscountedPrice(1000, 10):",
@@ -748,13 +824,21 @@ module.exports = {
   getAllTagsNested,
   findProductsByTag,
   getReviewCounts,
-  getFiveStarReviews,
   getCalculatedAverageRating,
+  getFiveStarReviews,
   getAllCalculatedRatings,
   getMostReviewedProduct,
   getAllReviewRatingsFlat,
   getAllTagsFlat,
   getAllCommentsFlat,
+  getAveragePriceByCategory,
+  getStatistics,
+  linearSearch,
+  linearSearchProductById,
+  binarySearch,
+  binarySearchByPrice,
+  bubbleSort,
+  sortProducts,
   groupByCategory,
   summarizeCategoryCounts,
   countFrequency,
@@ -770,10 +854,6 @@ module.exports = {
   searchHistory,
   recordSearch,
   undoSearch,
-  Stack,
-  searchHistory,
-  recordSearch,
-  undoSearch,
   Queue,
   categoryTree,
   printCategories,
@@ -783,4 +863,8 @@ module.exports = {
   generateProductsForComplexityTest,
   findSameCategoryPairsNestedLoop,
   findSameCategoryPairsWithMap,
+  getStatisticsRefactored,
+  getTitle,
+  sumPrices,
+  filterByCategory,
 };

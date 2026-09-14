@@ -76,3 +76,72 @@ function renderProducts(list) {
 
 // Latihan 17.1: render 5 produk dummy
 renderProducts(products.slice(0, 5));
+
+// Bagian 18 — State Management Sederhana (Tanpa Library)
+const state = {
+  products: products,
+  search: "",
+  category: "all",
+  sortBy: "default",
+  favorites: [],
+  status: "idle",
+};
+
+function render() {
+  // ambil state.products, filter berdasarkan state.search dan state.category,
+  // sort berdasarkan state.sortBy, lalu renderProducts(hasil)
+  let result = state.products;
+
+  // filter search
+  if (state.search.trim() !== "") {
+    const keyword = state.search.toLowerCase();
+    result = result.filter((p) => p.title.toLowerCase().includes(keyword));
+  }
+
+  // filter category
+  if (state.category !== "all") {
+    result = result.filter((p) => p.category === state.category);
+  }
+
+  // sort
+  switch (state.sortBy) {
+    case "price-asc":
+      result = [...result].sort((a, b) => a.price - b.price);
+      break;
+    case "price-desc":
+      result = [...result].sort((a, b) => b.price - a.price);
+      break;
+    case "rating":
+      result = [...result].sort((a, b) => b.rating - a.rating);
+      break;
+    case "title":
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title));
+      break;
+    default:
+      break;
+  }
+
+  state.status = result.length === 0 ? "empty" : "success";
+  renderProducts(result);
+}
+
+render();
+
+// Bagian 19 — Event Handling
+const searchInput = document.querySelector("#search-input");
+searchInput.addEventListener("input", (e) => {
+  state.search = e.target.value;
+  render();
+});
+
+const categorySelect = document.querySelector("#category-select");
+categorySelect.addEventListener("change", (e) => {
+  state.category = e.target.value;
+  render();
+});
+
+const sortSelect = document.querySelector("#sort-select");
+sortSelect.addEventListener("change", (e) => {
+  state.sortBy = e.target.value;
+  render();
+});
