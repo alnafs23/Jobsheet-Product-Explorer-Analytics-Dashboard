@@ -681,6 +681,18 @@ function getStatisticsRefactored(products) {
   };
 }
 
+// Bagian 22 — Promise
+const promise = new Promise((resolve, reject) => {
+  const success = true;
+  if (success) resolve("Data berhasil diambil");
+  else reject("Terjadi error");
+});
+
+promise
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error))
+  .finally(() => console.log("Selesai, apa pun hasilnya"));
+
 console.log("\nBagian 1 — JavaScript Fundamentals");
 console.log(
   "calculateDiscountedPrice(1000, 10):",
@@ -812,6 +824,7 @@ console.log(
   "findSameCategoryPairsWithMap:",
   findSameCategoryPairsWithMap(testItems1000),
 );
+console.log("\nBagian 22 — Promise");
 
 module.exports = {
   calculateDiscountedPrice,
